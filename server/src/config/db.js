@@ -6,18 +6,27 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure data folder exists
-const dataDir = path.resolve(__dirname, '../../data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+let dbPath;
+if (process.env.DB_PATH) {
+  dbPath = path.isAbsolute(process.env.DB_PATH)
+    ? process.env.DB_PATH
+    : path.resolve(__dirname, '../../', process.env.DB_PATH);
+} else if (process.env.VERCEL) {
+  dbPath = '/tmp/database.sqlite';
+} else {
+  const dataDir = path.resolve(__dirname, '../../data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  dbPath = path.join(dataDir, 'database.sqlite');
 }
 
-const dbPath = process.env.DB_PATH 
-  ? path.resolve(__dirname, '../../', process.env.DB_PATH)
-  : path.join(dataDir, 'database.sqlite');
-
 const db = new Database(dbPath);
-db.pragma('journal_mode = WAL');
+try {
+  db.pragma('journal_mode = WAL');
+} catch (e) {
+  // Ignore WAL pragma warning if environment doesn't support it
+}
 db.pragma('foreign_keys = ON');
 
 // Initialize tables
