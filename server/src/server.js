@@ -37,6 +37,11 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando com sucesso em http://localhost:${PORT}`);
-});
+// Only listen on port if not running in Vercel Serverless environment
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando com sucesso em http://localhost:${PORT}`);
+  });
+}
+
+export default app;
