@@ -1,0 +1,20 @@
+{
+  "name": "lifeflow-task-dashboard",
+  "version": "1.0.0",
+  "description": "Personal Task Management and Life Dashboard (React + Node.js/Express + SQLite)",
+  "scripts": {
+    "server": "npm --prefix server start",
+    "client": "npm --prefix client dev",
+    "server:dev": "npm --prefix server run dev",
+    "build": "npm --prefix client run build"
+  },
+  "keywords": [
+    "task-manager",
+    "dashboard",
+    "react",
+    "express",
+    "sqlite"
+  ],
+  "author": "",
+  "license": "ISC"
+}
